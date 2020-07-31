@@ -74,9 +74,10 @@ def adx(close, high, low, look_back_period, modified_version=False):
 
     if modified_version:
         signals_2 = signals.copy()
+        signals_2 = signals_2.rolling(5).mean()
         for i in signals.columns:
-            signals[i][signals[i] > 0] = 1
-            signals[i][signals[i] < 0] = -1
-        return (adx * signals), signals_2
+            signals_2[i][signals_2[i] > 0] = 1
+            signals_2[i][signals_2[i] < 0] = -1
+        return (adx * signals_2).rolling(10).mean(), signals
     else:
         return adx, signals
