@@ -16,20 +16,10 @@ def rsi(data, look_back_period=14):
         down[i].loc[down[i] > 0] = 0
     down = abs(down)
 
-    dic_up = {}
-    dic_down = {}
-    for i in up.columns:
-        dic_up[i] = [up[:look_back_period + 1][i].mean()]
-        dic_down[i] = [down[:look_back_period + 1][i].mean()]
+    dic_up = smoothing(up, look_back_period)
+    dic_down = smoothing(down, look_back_period)
 
-    for i in range(look_back_period + 1, len(daily_ret)):
-        for j in up.columns:
-            dic_up[j].append((dic_up[j][-1] * (look_back_period - 1) + up.iloc[i][j]) / look_back_period)
-            dic_down[j].append((dic_down[j][-1] * (look_back_period - 1) + down.iloc[i][j]) / look_back_period)
-
-    pd.DataFrame.from_dict(dic_up).set_index(daily_ret.index[look_back_period:])
-    rsi = 100 - (100 / (1 + pd.DataFrame.from_dict(dic_up).set_index(daily_ret.index[look_back_period:]) / pd.DataFrame.from_dict(
-        dic_down).set_index(daily_ret.index[look_back_period:])))
+    rsi = 100 - (100 / (1 + dic_up/dic_down))
     return rsi
 
 
