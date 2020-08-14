@@ -54,11 +54,12 @@ class learner(object):
 
                 if out_sample_accuracy >= best_out:
                     if in_sample_accuracy > best_in:
-                        print([tree, d, in_sample_accuracy, out_sample_accuracy])
+                        #print([tree, d, in_sample_accuracy, out_sample_accuracy])
                         best_out = out_sample_accuracy
                         best_in = in_sample_accuracy
                         n_tree = tree
                         n_depth = d
+        print(self.symbol, ': best tree:',n_tree,', depth:', n_depth,'In-sample accuracy:', best_in,'Out-sample accuracy:', best_out)
         self.best_tree = n_tree
         self.best_depth = n_depth
         self.rf = RandomForestClassifier(n_estimators=n_tree, max_depth=n_depth)
